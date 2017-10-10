@@ -66,8 +66,9 @@ With each subdirectory containing all of the code for the relevant sub-project.
 | Barcode  | int64    |
 | Checkout | Checkout |
 #### Checkout
-| Field      | Type               |
-|------------|-------------------:| 
-| Who        | user name (string) |
-| Production | string             |
-| Until When | date               |
+| Field         | Type               |
+|---------------|-------------------:|
+| Who           | user name (string) |
+| Production    | string             |
+| Checkout Date | date               |
+| Until When    | date               |
