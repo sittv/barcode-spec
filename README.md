@@ -36,22 +36,22 @@ Verified users will be able to login with their username/production, scan the it
 | Containerization | Docker  |
 
 ### Database Specification
-* User
-  | Field          | Type           |
-  |----------------|---------------:|
-  | Name           | string         |
-  | Username/email | string         |
-  | CWID           | int64          |
-  | Productions    | list of string |
-* Item
-  | Field    | Type     |
-  |----------|---------:|
-  | Name     | string   |
-  | Barcode  | int64    |
-  | Checkout | Checkout |
-* Check out
-  | Field      | Type               |
-  |------------|-------------------:| 
-  | Who        | user name (string) |
-  | Production | string             |
-  | Until When | date               |
+#### User
+| Field          | Type           |
+|----------------|---------------:|
+| Name           | string         |
+| Username/email | string         |
+| CWID           | int64          |
+| Productions    | list of string |
+#### Item
+| Field    | Type     |
+|----------|---------:|
+| Name     | string   |
+| Barcode  | int64    |
+| Checkout | Checkout |
+#### Checkout
+| Field      | Type               |
+|------------|-------------------:| 
+| Who        | user name (string) |
+| Production | string             |
+| Until When | date               |
