@@ -5,6 +5,8 @@ In order to establish a more consistent and traceable system for the management 
 
 The lack of a proper equipment management system has needlessly tasked members, and made operations difficult.
 
+The current system revolves around an [Equipment Signout Form](http://goo.gl/forms/FcwfmbcNg2). The specification for a new system is meant to both fulfill all uses for the form and eliminate the need for it.
+
 ## Requirements
 The system in question should be similar to library self check-out/in system.
 Verified users will be able to login with their username/production, scan the items needed for the production, and log their usage.
@@ -22,6 +24,10 @@ Verified users will be able to login with their username/production, scan the it
 ### Backend UI
 * Ability to check out who/which productions are in possession of what equipment.
 * Usage statistics based on logs (what equipment is used by most, by whom, etc.)
+### Notification Bot
+* __Bookie Bot__ *the bot that comes after you if you don't return what you owe* 
+* Slack bot for overdue item notifications
+* Contacts necessary parties (user, producer, director of operations, etc.)
 
 ## Design Considerations
 ### Database
@@ -30,13 +36,14 @@ Verified users will be able to login with their username/production, scan the it
 * Use a standard scripting language such as Python or NodeJS.
 ### Touch Screen
 * Integration of a card-swipe system to expedite login on the touch screen.
-* Item entry by barcode and calendar selector.
+* Item entry by barcode and calendar selector (for date-until).
 
 ## Repository Structure
 Until the project matures, we will place all of the source code into the [sittv/barcodes](https://github.com/sittv/barcodes) repository.
 The structure of the repository should look similar to:
 ```
 .
+├── bookiebot
 ├── db
 ├── touchscreen
 └── webapp
