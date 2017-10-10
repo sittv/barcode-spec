@@ -24,8 +24,24 @@ Verified users will be able to login with their username/production, scan the it
 * Usage statistics based on logs (what equipment is used by most, by whom, etc.)
 
 ## Design Considerations
-* Design a web-app, in a standard scripting language such as Python or NodeJS.
-* Containerization of the database using Docker.
+### Database
+* Containerize the database (most likely using Docker)
+### Web App
+* Use a standard scripting language such as Python or NodeJS.
+### Touch Screen
+* Integration of a card-swipe system to expedite login on the touch screen.
+* Item entry by barcode and calendar selector.
+
+## Repository Structure
+Until the project matures, we will place all of the source code into the [sittv/barcodes](https://github.com/sittv/barcodes) repository.
+The structure of the repository should look similar to:
+```
+.
+├── db
+├── touchscreen
+└── webapp
+```
+With each subdirectory containing all of the code for the relevant sub-project.
 
 ## Prototype Specification
 | Component        | Tool    |
