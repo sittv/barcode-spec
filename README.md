@@ -5,8 +5,6 @@ In order to establish a more consistent and traceable system for the management 
 
 The lack of a proper equipment management system has needlessly tasked members, and made operations difficult.
 
-The current system revolves around an [Equipment Signout Form](http://goo.gl/forms/FcwfmbcNg2). The specification for a new system is meant to both fulfill all uses for the form and eliminate the need for it.
-
 ## Requirements
 The system in question should be similar to library self check-out/in system.
 Verified users will be able to login with their username/production, scan the items needed for the production, and log their usage.
