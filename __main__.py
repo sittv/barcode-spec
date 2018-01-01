@@ -1,10 +1,9 @@
 import os
 
-from flask import Flask
+from baseapp import app
 from bookiebot import bookiebot
 
 
-app = Flask(__name__)
 app.register_blueprint(bookiebot)
 
 
