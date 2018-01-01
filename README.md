@@ -37,12 +37,12 @@ Verified users will be able to login with their username/production, scan the it
 * Item entry by barcode and calendar selector (for date-until).
 
 ## Prototype Specification
-| Component        | Tool    |
-|------------------|---------|
-| Database         | MongoDB |
-| Language         | Python  |
-| Web Framework    | Flask   |
-| Containerization | Docker  |
+| Component        | Tool           |
+|------------------|----------------|
+| Database         | MongoDB, Redis |
+| Language         | Python         |
+| Web Framework    | Flask          |
+| Containerization | Docker         |
 
 ### Database Specification
 #### User
