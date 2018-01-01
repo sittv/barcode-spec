@@ -1,12 +1,13 @@
 import datetime
-from functools import partial
 import glob
 from hashlib import sha1
 import secrets
 
 from flask import Blueprint, abort, jsonify, request
+from redis import RedisError
 
-from baseapp import app, redis_store
+from baseapp import redis_store
+from search import get_barcode
 
 
 class BarcodeSearchError(Exception):
@@ -36,7 +37,7 @@ def current_checkouts():
     pass
 
 
-@bookiebot.route('/bookiebot/due_by', 'methods'=['GET'])
+@bookiebot.route('/bookiebot/due_by', methods=['GET'])
 def what_is_due_by():
     try:
         date_string = request.args['date']
@@ -44,7 +45,7 @@ def what_is_due_by():
         if len(date_fields) < 2 or len(date_fields) > 3:
             raise ValueError('Must be YYYY-MM-DD or MM-DD.')
     except (KeyError, ValueError):
-        abort(400)
+        return abort(400)
 
     try:
         if len(date_fields) == 2:
@@ -59,8 +60,10 @@ def what_is_due_by():
                 date_string,
                 '%Y-%m-%d'
             )
+        else:
+            raise ValueError('Invalid date')
     except (KeyError, ValueError):
-        abort(400)
+        return abort(400)
 
     timestamp = int(due_date.timestamp())
 
@@ -74,23 +77,26 @@ def make_group():
         name = request.json['name']
         items = request.json['items']
     except KeyError:
-        abort(400)
+        return abort(400)
 
-    for id in iter(partial(secrets.token_hex, 8), None):
-        try:
-            if not redis_store.exists(f'group:{id}'):
-                break
-        except:
-            pass
+    id = secrets.token_hex(8)
+
+    try:
+        while redis_store.exists(f'group:{id}'):
+            id = secrets.token_hex(8)
+    except RedisError:
+        return abort(500)
+
+    redis_store.hset('group:names', name, id)
 
     try:
         barcodes = [
-            _get_barcode(item) for item in items
+            get_barcode(item) for item in items
         ]
     except BarcodeSearchError:
-        abort(400)
-
-    redis_store.sadd(f'group:{id}:items', *barcodes)
+        return abort(400)
+    else:
+        redis_store.sadd(f'group:{id}:items', *barcodes)
 
     return jsonify({
         'group_id': id,
@@ -100,23 +106,19 @@ def make_group():
 @bookiebot.route('/bookiebot/what_has', methods=['GET'])
 def what_does_have():
     identifier = request.args['user']
-    is_user = redis.sismember('names:user', identifier)
-    is_production = redis.sismember('names:production', identifier)
+    is_user = redis_store.sismember('names:user', identifier)
+    is_production = redis_store.sismember('names:production', identifier)
 
     if is_user:
-        pass
+        results = []
     elif is_production:
-        pass
+        results = []
     else:
-        abort(400)
+        return abort(400)
 
     # TODO fix this
     return jsonify({
-        'items': [
-            {'barcode': barcode,
-             'description': description}
-            for barcode, description in ()
-        ],
+        'items': results,
     })
 
 
