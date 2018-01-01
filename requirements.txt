@@ -10,6 +10,7 @@ Flask-Principal==0.4.0
 Flask-Redis==0.3.0
 Flask-Security==3.0.0
 Flask-WTF==0.14.2
+hiredis==0.2.0
 itsdangerous==0.24
 Jinja2==2.10
 MarkupSafe==1.0
