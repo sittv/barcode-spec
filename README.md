@@ -36,18 +36,6 @@ Verified users will be able to login with their username/production, scan the it
 * Integration of a card-swipe system to expedite login on the touch screen.
 * Item entry by barcode and calendar selector (for date-until).
 
-## Repository Structure
-Until the project matures, we will place all of the source code into the [sittv/barcodes](https://github.com/sittv/barcodes) repository.
-The structure of the repository should look similar to:
-```
-.
-├── bookiebot
-├── db
-├── touchscreen
-└── webapp
-```
-With each subdirectory containing all of the code for the relevant sub-project.
-
 ## Prototype Specification
 | Component        | Tool    |
 |------------------|---------|
