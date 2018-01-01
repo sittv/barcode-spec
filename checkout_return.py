@@ -1,10 +1,20 @@
-from flask import abort, jsonify, request
+from flask import Blueprint, abort, jsonify, request
 from redis.exceptions import RedisError
 
-from baseapp import app, redis_store
+from baseapp import redis_store
 
 
-@app.route('/checkin', methods=['POST'])
+checkout_return = Blueprint('checkout_return', __name__)
+
+
+@checkout_return.route('/checkout', methods=['GET'])
+def check_out():
+    return jsonify({
+
+    })
+
+
+@checkout_return.route('/checkin', methods=['POST'])
 def check_in():
     try:
         barcodes = request.json['barcodes']
