@@ -1,7 +1,7 @@
 from flask import Blueprint, abort, jsonify, request
 from redis.exceptions import RedisError
 
-from baseapp import redis_store
+from barcodes.baseapp import redis_store
 
 
 checkout_return = Blueprint('checkout_return', __name__)

@@ -6,8 +6,8 @@ import secrets
 from flask import Blueprint, abort, jsonify, request
 from redis import RedisError
 
-from baseapp import redis_store
-from search import get_barcode
+from barcodes.baseapp import redis_store
+from barcodes.search import get_barcode
 
 
 class BarcodeSearchError(Exception):
