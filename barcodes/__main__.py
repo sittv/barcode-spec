@@ -4,12 +4,11 @@ import secrets
 from hashlib import sha1
 
 from flask import Blueprint, Flask, abort, jsonify, request
-from flask.ext.mongoengine import MongoEngine
-from flask.ext.redis import FlaskRedis
-from flask.ext.security import Security
-from flask.ext.wtf import Form
-from flask_security import (MongoEngineUserDatastore, RoleMixin, Security,
-                            UserMixin, login_required)
+from flask_bootstrap import Bootstrap
+from flask_mongoengine import MongoEngine
+from flask_redis import FlaskRedis
+from flask_security import (MongoEngineUserDatastore, RoleMixin, Security, UserMixin, login_required)
+from flask_wtf import Form
 from redis.exceptions import RedisError
 from wtforms import StringField
 from wtforms.validators import InputRequired, Length
@@ -26,7 +25,38 @@ app.config.from_envvar('REDIS_SETTINGS')
 
 
 db.init_app(app)
+Bootstrap(app)
+
+
+# # # # # # # # # # User/Role and Security Model # # # # # # # # # # # # # # # # # # # # #
+
+
+class Role(db.Document, RoleMixin):
+    name = db.StringField(max_length=80, unique=True)
+    description = db.StringField(max_length=255)
+
+
+class User(db.Document, UserMixin):
+    email = db.StringField(max_length=255)
+    password = db.StringField(max_length=255)
+    active = db.BooleanField(default=True)
+    confirmed_at = db.DateTimeField()
+    roles = db.ListField(db.ReferenceField(Role), default=[])
+
+
+user_data_store = MongoEngineUserDatastore(db, user_model=User, role_model=Role)
+security = Security(app, user_data_store)
+
+
+# # # # # # # # # # # # # # # # # # # # # Redis Setup # # # # # # # # # # # # # # # # # #
+
 redis_store = FlaskRedis(app)
+
+
+# If we extend the functionality of our Redis data-store,
+# it will be useful to store the precomputed hashes of the
+# scripts so that we don't have to constantly recompute the
+# hashes.
 
 
 hashes = {}
@@ -34,11 +64,24 @@ for script in glob.glob('luascripts/*.lua'):
     hash_ = sha1()
     with open(script, 'rb') as f:
         hash_.update(f.read())
-        hashes[script] = hash_.hexdigest()
+        hashes[script.rstrip('.lua')] = hash_.hexdigest()
+
+
+# # # # # # # # Forms # # # # # # # # # # # # # # # # # # # # # # #
+
+
+class LoginForm(Form):
+    username = StringField(
+        'username',
+        validators=[InputRequired()]
+    )
+    cwid = StringField(
+        'Campus Wide ID',
+        validators=[InputRequired(), Length(min=8, max=8)]
+    )
 
 
 # # # # # # # # # # # # # # # # # # # # # BookieBot API # # # # # # # # # # # # # # # # # #
-
 
 bookiebot = Blueprint(
     'bookiebot',
@@ -85,6 +128,7 @@ def what_is_due_by():
     return [
 
     ]
+
 
 @bookiebot.route('/bookiebot/make_group', methods=['POST'])
 def make_group():
@@ -205,33 +249,6 @@ class BarcodeSearchError(Exception):
 def get_barcode(item: str) -> str:
     return ''
 
-
-class Role(db.Document, RoleMixin):
-    name = db.StringField(max_length=80, unique=True)
-    description = db.StringField(max_length=255)
-
-
-class User(db.Document, UserMixin):
-    email = db.StringField(max_length=255)
-    password = db.StringField(max_length=255)
-    active = db.BooleanField(default=True)
-    confirmed_at = db.DateTimeField()
-    roles = db.ListField(db.ReferenceField(Role), default=[])
-
-
-user_data_store = MongoEngineUserDatastore(db, user_model=User, role_model=Role)
-security = Security(app, user_data_store)
-
-
-class LoginForm(Form):
-    username = StringField(
-        'username',
-        validators=[InputRequired()]
-    )
-    cwid = StringField(
-        'Campus Wide ID',
-        validators=[InputRequired(), Length(min=8, max=8)]
-    )
 
 
 if __name__ == '__main__':
