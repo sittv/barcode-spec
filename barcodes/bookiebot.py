@@ -7,14 +7,8 @@ from flask import Blueprint, abort, jsonify, request
 from redis import RedisError
 
 from barcodes.baseapp import redis_store
-from barcodes.search import get_barcode
+from barcodes.search import get_barcode, BarcodeSearchError
 
-
-class BarcodeSearchError(Exception):
-    """
-    Exception raised when no matching barcode
-    can be found.
-    """
 
 
 hashes = {}

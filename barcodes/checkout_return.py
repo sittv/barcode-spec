@@ -3,7 +3,6 @@ from redis.exceptions import RedisError
 
 from barcodes.baseapp import redis_store
 
-
 checkout_return = Blueprint('checkout_return', __name__)
 
 
